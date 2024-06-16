@@ -4,8 +4,10 @@ python3 -m venv python3-10_venv
 # Activate 
 source python3-10_venv/bin/activate 
 
-# Install Flask 
-pip install Flask 
+# Install Flask and deps
+pip install Flask
+pip install flask-sqlalchemy 
+pip install requests
 
 # Create a source folder 
 mkdir src 
