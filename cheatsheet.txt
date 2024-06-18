@@ -1,0 +1,30 @@
+# Create a Python virtual environment 
+python3 -m venv python3-10_venv 
+ 
+# Activate 
+source python3-10_venv/bin/activate 
+
+# Install Flask and deps
+pip install Flask
+pip install flask-sqlalchemy 
+pip install requests
+
+# Create a source folder 
+mkdir src 
+# Create the app file 
+src/app.py 
+
+# Tell the system which file is the application file 
+export FLASK_APP=src/app.py  
+
+# Run the app 
+flask run 
+
+# Steps for hosting on Heroku 
+pip install gunicorn 
+
+# Add deps 
+pip freeze > requirements.txt 
+
+# create a Procfile at the root of the directory.  
+echo "web: gunicorn src.app:app" > Procfile 
