@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil import parser
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Weather.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///IgDolphin.sqlite3'
 
 '''
 Define the database model
@@ -94,9 +94,9 @@ if __name__ == "__main__":
         # db.drop_all() # Only on dev!
         db.create_all()
         process_ig_posts(ig_posts_json)
-        # all_ig_users = IgUsers.query.all()
-        # for ig_user in all_ig_users:
-        #     print(f"username = {ig_user.username}, id = {ig_user.id}, full_name = {ig_user.full_name}, last_updated = {ig_user.last_updated}\n")
-        # all_ig_posts = IgPosts.query.all()
-        # for ig_post in all_ig_posts:
-        #     print(f"id = {ig_post.id}, type = {ig_post.type}, product_type = {ig_post.product_type}, caption = {ig_post.caption}, likes_count = {ig_post.likes_count}, video_view_count = {ig_post.video_view_count}, video_play_count = {ig_post.video_play_count}, comments_count = {ig_post.comments_count}, timestamp = {ig_post.timestamp}, last_updated = {ig_post.last_updated}, user_id = {ig_post.user_id}\n")
+        all_ig_users = IgUsers.query.all()
+        for ig_user in all_ig_users:
+            print(f"username = {ig_user.username}, id = {ig_user.id}, full_name = {ig_user.full_name}, last_updated = {ig_user.last_updated}\n")
+        all_ig_posts = IgPosts.query.all()
+        for ig_post in all_ig_posts:
+            print(f"id = {ig_post.id}, type = {ig_post.type}, product_type = {ig_post.product_type}, caption = {ig_post.caption}, likes_count = {ig_post.likes_count}, video_view_count = {ig_post.video_view_count}, video_play_count = {ig_post.video_play_count}, comments_count = {ig_post.comments_count}, timestamp = {ig_post.timestamp}, last_updated = {ig_post.last_updated}, user_id = {ig_post.user_id}\n")
