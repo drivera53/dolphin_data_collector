@@ -60,12 +60,16 @@ In main we first get the current temperature and then
 create a new object that we can add to the database. 
 '''
 if __name__ == "__main__":
+    ig_posts_json = get_all_ig_posts()
     with app.app_context():
         # db.drop_all() # When testing on Dev!
         db.create_all()
-        all_ig_users = IgUsers.query.all()
-        for ig_user in all_ig_users:
-            print(f"username = {ig_user.username}, id = {ig_user.id}, full_name = {ig_user.full_name}, last_updated = {ig_user.last_updated}\n")
-        all_ig_posts = IgPosts.query.all()
-        for ig_post in all_ig_posts:
-            print(f"id = {ig_post.id}, type = {ig_post.type}, product_type = {ig_post.product_type}, caption = {ig_post.caption}, likes_count = {ig_post.likes_count}, video_view_count = {ig_post.video_view_count}, video_play_count = {ig_post.video_play_count}, comments_count = {ig_post.comments_count}, timestamp = {ig_post.timestamp}, last_updated = {ig_post.last_updated}, user_id = {ig_post.user_id}\n")
+        process_ig_posts(ig_posts_json)
+
+        # For Dev!
+        # all_ig_users = IgUsers.query.all()
+        # for ig_user in all_ig_users:
+        #     print(f"username = {ig_user.username}, id = {ig_user.id}, full_name = {ig_user.full_name}, last_updated = {ig_user.last_updated}\n")
+        # all_ig_posts = IgPosts.query.all()
+        # for ig_post in all_ig_posts:
+        #     print(f"id = {ig_post.id}, type = {ig_post.type}, product_type = {ig_post.product_type}, caption = {ig_post.caption}, likes_count = {ig_post.likes_count}, video_view_count = {ig_post.video_view_count}, video_play_count = {ig_post.video_play_count}, comments_count = {ig_post.comments_count}, timestamp = {ig_post.timestamp}, last_updated = {ig_post.last_updated}, user_id = {ig_post.user_id}\n")
