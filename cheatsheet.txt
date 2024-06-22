@@ -8,6 +8,7 @@ source python3-10_venv/bin/activate
 pip install Flask
 pip install flask-sqlalchemy 
 pip install requests
+pip install python-dateutil
 
 # Create a source folder 
 mkdir src 
@@ -17,14 +18,5 @@ src/app.py
 # Tell the system which file is the application file 
 export FLASK_APP=src/app.py  
 
-# Run the app 
-flask run 
-
-# Steps for hosting on Heroku 
-pip install gunicorn 
-
-# Add deps 
-pip freeze > requirements.txt 
-
-# create a Procfile at the root of the directory.  
-echo "web: gunicorn src.app:app" > Procfile 
+# Run the app - This is an offline task to be run at schedule, don't run via `flask run`
+python ./src/app.py

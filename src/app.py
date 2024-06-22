@@ -4,51 +4,22 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from dateutil import parser
+from members.models import DB_PATH, db, IgUsers, IgPosts
 
+# creating a Flask app 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///IgDolphin.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_PATH
 
-'''
-Define the database model
-that is used to store 
-the IG data.
-'''
-
-db = SQLAlchemy(app)
-
-class IgUsers(db.Model):
-    __tablename__ = "ig_users"
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable=False) # As per IG Api
-    full_name = db.Column(db.String(60), unique=True, nullable=True)
-    last_updated = db.Column(db.DateTime, default=datetime.now())
-
-    # A user can have MANY posts
-    posts = db.relationship('IgPosts', back_populates='user', lazy='dynamic')
-
-class IgPosts(db.Model):
-    __tablename__ = "ig_posts"
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(60), nullable=True)
-    product_type = db.Column(db.String(60), nullable=True)
-    caption = db.Column(db.String(2200), nullable=True)
-    likes_count = db.Column(db.Integer, default=0)
-    video_view_count = db.Column(db.Integer, default=0)
-    video_play_count = db.Column(db.Integer, default=0)
-    comments_count = db.Column(db.Integer, default=0)
-    timestamp = db.Column(db.DateTime, nullable=True)
-    last_updated = db.Column(db.DateTime, default=datetime.now())
-
-    # A post has ONLY ONE user
-    user_id = db.Column(db.Integer, db.ForeignKey('ig_users.id'), unique=False, nullable=False)
-    user = db.relationship("IgUsers", back_populates="posts")     
+db.init_app(app)    
 
 '''
 Helper function to get updated post data from all IG accounts on file
 using APIFY API
 '''
+APIFY_GET_SCRAPER_ALL_POSTS = "https://api.apify.com/v2/acts/apify~instagram-api-scraper/runs/last/dataset/items?token=apify_api_TIHSy6bFZs94pmPGFdxjzOb3koxrVz03ZEag" 
+
 def get_all_ig_posts():
-    response = requests.get("https://api.apify.com/v2/acts/apify~instagram-api-scraper/runs/last/dataset/items?token=apify_api_TIHSy6bFZs94pmPGFdxjzOb3koxrVz03ZEag")
+    response = requests.get(APIFY_GET_SCRAPER_ALL_POSTS)
     return response.json()
 
 def process_ig_posts(ig_posts_json):
@@ -89,11 +60,9 @@ In main we first get the current temperature and then
 create a new object that we can add to the database. 
 '''
 if __name__ == "__main__":
-    ig_posts_json = get_all_ig_posts()
     with app.app_context():
-        # db.drop_all() # Only on dev!
+        # db.drop_all() # When testing on Dev!
         db.create_all()
-        process_ig_posts(ig_posts_json)
         all_ig_users = IgUsers.query.all()
         for ig_user in all_ig_users:
             print(f"username = {ig_user.username}, id = {ig_user.id}, full_name = {ig_user.full_name}, last_updated = {ig_user.last_updated}\n")
